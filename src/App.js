@@ -6,7 +6,7 @@ function App() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [stargazersCount, setStarts] = useState('');
-  const [contributorsUrl, setContributorsUrl] = useState('');
+  // const [contributorsUrl, setContributorsUrl] = useState('');
   const [arraContributors, setArrayContributors] = useState([]);
   const [repos, setRepos] = useState('');
   // const [avatar, setAvatar] = useState('');
@@ -60,28 +60,21 @@ function App() {
     setName(owner.login);
     setDescription(description);
     setStarts(stargazers_count);
-    setContributorsUrl(contributors_url);
-    setRepos(html_url);
     // setContributorsUrl(contributors_url);
-    // setFollowing(following);
-    // setRepos(public_repos);
-    // setAvatar(avatar_url);
+    setRepos(html_url);
   };
 
   const getTenContributors = (data) => {
     const { contributors_url } = data;
     console.log('дата из getTenContributors ', contributors_url);
 
-    if (contributorsUrl) {
-      fetch(`${contributorsUrl}`)
+    if (contributors_url) {
+      fetch(`${contributors_url}`)
         .then((res) => res.json())
         .then((data) => {
-          // let firstTen = data.slice(0, 10);
           const result = data.splice(0, 10).map((_data) => _data.login);
           console.log('result', result);
           setArrayContributors(result);
-
-          //console.log('dataNames', result);
         })
         .catch((err) => {
           console.log('Error Reading data ' + err);
@@ -139,9 +132,8 @@ function App() {
           <div className='innerDiv'>
             <a href='#'>{description} description</a>
             <a href='#'>{stargazersCount} stargazersCount</a>
-            {arraContributors.map((el) => (
-              <li>{el}</li>
-            ))}
+            {arraContributors.length &&
+              arraContributors.map((el) => <li>{el}</li>)}
           </div>
           <p>
             <a className='linkToRepo' href={repos} target='_blank'>
