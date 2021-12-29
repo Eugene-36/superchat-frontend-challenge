@@ -4,29 +4,104 @@ import './App.css';
 
 function App() {
   const [name, setName] = useState('');
-  const [userName, setUsername] = useState('');
-  const [followers, setFollowers] = useState('');
-  const [following, setFollowing] = useState('');
+  const [description, setDescription] = useState('');
+  const [stargazersCount, setStarts] = useState('');
+  const [contributorsUrl, setContributorsUrl] = useState('');
+  const [arraContributors, setArrayContributors] = useState([]);
   const [repos, setRepos] = useState('');
-  const [avatar, setAvatar] = useState('');
-  const [userInput, setUserInput] = useState('');
+  // const [avatar, setAvatar] = useState('');
+  const [userInputName, setUserInputName] = useState('');
+  const [userRepo, setUserRepo] = useState('');
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch('https://api.github.com/users/example')
+  // useEffect(() => {
+  //   // Тут надо будет вставить дефолтный url
+  //   fetch('https://api.github.com/repos/Eugene-36/shelter')
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setData(data);
+  //       getTenContributors(data);
+  //     });
+  // }, []);
+
+  const handleSearchName = (e) => {
+    setUserInputName(e.target.value.trim());
+  };
+
+  const handleSearchRepo = (e) => {
+    setUserRepo(e.target.value.trim());
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // https://api.github.com/repos/${userInputName}/${userRepo}
+    fetch(`https://api.github.com/repos/${userInputName}/${userRepo}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        if (data.message) {
+          setError(data.message);
+        } else {
+          //console.log('data.contributors_url', data);
+          setData(data);
+          getTenContributors(data);
+          setError(null);
+        }
       });
-  }, []);
+  };
 
+  const setData = ({
+    owner,
+    description,
+    stargazers_count,
+    contributors_url,
+    html_url,
+    // contributors_url
+  }) => {
+    setName(owner.login);
+    setDescription(description);
+    setStarts(stargazers_count);
+    setContributorsUrl(contributors_url);
+    setRepos(html_url);
+    // setContributorsUrl(contributors_url);
+    // setFollowing(following);
+    // setRepos(public_repos);
+    // setAvatar(avatar_url);
+  };
+
+  const getTenContributors = (data) => {
+    const { contributors_url } = data;
+    console.log('дата из getTenContributors ', contributors_url);
+
+    if (contributorsUrl) {
+      fetch(`${contributorsUrl}`)
+        .then((res) => res.json())
+        .then((data) => {
+          // let firstTen = data.slice(0, 10);
+          const result = data.splice(0, 10).map((_data) => _data.login);
+          console.log('result', result);
+          setArrayContributors(result);
+
+          //console.log('dataNames', result);
+        })
+        .catch((err) => {
+          console.log('Error Reading data ' + err);
+        });
+    }
+  };
+  console.log('arraContributors', arraContributors);
+  //! - the repository author  - сделано
+  //! - the icon selected by the link creator ???
+  //! - title and description of the repository - сделано
+  //! - the number of stars - сделано
+  //! - the top 10 contributors  ... "contributions": 1
+  //! - a button to star the repository
   return (
     <div className='App'>
       <div className='navbar'>
         <h1>Github Search</h1>{' '}
       </div>
       <div className='search'>
-        <form className='SearchForm'>
+        <form className='SearchForm' onSubmit={handleSubmit}>
           <button type='submit' className='SearchForm-button'>
             <span className='SearchForm-button-label'>Search</span>
           </button>
@@ -37,37 +112,44 @@ function App() {
             type='text'
             autoComplete='off'
             autoFocus
-            placeholder='Search Github User'
-            // checked={completed}
-            //onChange={handleChange}
+            placeholder='Search Username'
+            onChange={handleSearchName}
+          />
+          <input
+            className='SearchForm-input'
+            //value={query}
+            type='text'
+            autoComplete='off'
+            autoFocus
+            placeholder='Search Repo'
+            onChange={handleSearchRepo}
           />
         </form>
       </div>
 
       {/* Карточка */}
+      {error ? (
+        <h2>{error}</h2>
+      ) : (
+        <div className='card'>
+          {/* <img src={avatar} className='userImg' alt='John' /> */}
+          <h2>{name}</h2>
 
-      <div className='card'>
-        <img src='../w3images/team2.jpg' className='userImg' alt='John' />
-        <h2>Name</h2>
-        <p className='title'>Title</p>
-        <div className='innerDiv'>
-          <a href='#'>
-            <i className='fa fa-dribbble'></i>
-          </a>
-          <a href='#'>
-            <i className='fa fa-twitter'></i>
-          </a>
-          <a href='#'>
-            <i className='fa fa-linkedin'></i>
-          </a>
-          <a href='#'>
-            <i className='fa fa-facebook'></i>
-          </a>
+          <p className='title'>Title</p>
+          <div className='innerDiv'>
+            <a href='#'>{description} description</a>
+            <a href='#'>{stargazersCount} stargazersCount</a>
+            {arraContributors.map((el) => (
+              <li>{el}</li>
+            ))}
+          </div>
+          <p>
+            <a className='linkToRepo' href={repos} target='_blank'>
+              See the repo
+            </a>
+          </p>
         </div>
-        <p>
-          <button>Contacts</button>
-        </p>
-      </div>
+      )}
     </div>
   );
 }

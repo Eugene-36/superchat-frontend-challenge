@@ -130,7 +130,7 @@
   font-size: 18px;
 }
 
-button {
+.linkToRepo {
   border: none;
   outline: 0;
   display: inline-block;
@@ -158,4 +158,5 @@ a:hover {
 }
 .innerDiv {
   margin: 24px 0;
+  display: flex;
 }
