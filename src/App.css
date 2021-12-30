@@ -118,7 +118,7 @@
 /** Стили для карточки  */
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
+  max-width: 600px;
   margin: auto;
   margin-top: 50px;
   text-align: center;
@@ -160,4 +160,19 @@ a:hover {
   margin: 24px 0;
   display: flex;
   flex-direction: column;
+}
+
+.listItems {
+  list-style: none;
+}
+.discrStrat {
+  display: flex;
+  flex-direction: column;
+}
+.starGatherCount {
+  margin-top: 10px;
+}
+
+.topTenContr {
+  margin-bottom: 0px;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form } from 'semantic-ui-react';
+import { v4 as uuidv4 } from 'uuid';
 import './App.css';
 
 function App() {
@@ -86,8 +86,8 @@ function App() {
   //! - the icon selected by the link creator ???
   //! - title and description of the repository - сделано
   //! - the number of stars - сделано
-  //! - the top 10 contributors  ... "contributions": 1
-  //! - a button to star the repository
+  //! - the top 10 contributors  ... "contributions": 1 - сделано
+  //! - a button to star the repository - сделано
   return (
     <div className='App'>
       <div className='navbar'>
@@ -125,15 +125,24 @@ function App() {
         <h2>{error}</h2>
       ) : (
         <div className='card'>
-          {/* <img src={avatar} className='userImg' alt='John' /> */}
           <h2>{name}</h2>
 
-          <p className='title'>Title</p>
           <div className='innerDiv'>
-            <a href='#'>{description} description</a>
-            <a href='#'>{stargazersCount} stargazersCount</a>
-            {arraContributors.length &&
-              arraContributors.map((el) => <li>{el}</li>)}
+            <div className='discrStrat'>
+              <span>
+                <b> Description:</b> {description}
+              </span>
+              <span className='starGatherCount'>
+                <b> StargazersCount:</b> {stargazersCount}
+              </span>
+            </div>
+            <div>
+              <h3 className='topTenContr'> Top 10 Contributors </h3>
+              <ul className='listItems'>
+                {arraContributors.length &&
+                  arraContributors.map((el) => <li key={uuidv4()}>{el}</li>)}
+              </ul>
+            </div>
           </div>
           <p>
             <a className='linkToRepo' href={repos} target='_blank'>
